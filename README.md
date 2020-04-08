@@ -4,7 +4,10 @@ The goal of this tool is to  train flexible deep neural acoustic models in the c
 
  A high level overview for the Keras--Kaldi toolkit developed in this [work](http://github.com/yhifny/keras-kaldi) is shown in in the following figure:
 
- <img src="images/keras_kaldi.png" width="220" img align="center">
+ <p align="center">
+ <img src="images/keras_kaldi.png" width="400">
+</p>
+
 
  The toolkit has a Python interface   to Kaldi C++ libraries via  [PyKaldi](https://pykaldi.github.io). Moreover, Tensorflow and Keras toolkits are used for flexible neural network modeling.
 

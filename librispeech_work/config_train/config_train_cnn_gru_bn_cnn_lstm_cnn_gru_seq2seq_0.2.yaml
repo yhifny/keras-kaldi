@@ -1,0 +1,343 @@
+seed: 600
+out_path: /work/asr_work
+
+
+model:
+    input_feat: fmllr
+    input_dim: 40
+    encoders:
+        encoder_1:
+            layers:            
+                - type: batchnormalization            
+                - type: dropout
+                  value: 0.2  
+                  
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2
+                  
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2                 
+                  
+
+
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true 
+                  merge_mode: concat
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2
+
+                  
+                - type: dense
+                  units: 500
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  function: relu                  
+
+        encoder_2:
+            layers:            
+                - type: batchnormalization            
+                - type: dropout
+                  value: 0.2  
+                  
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2
+                  
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2                 
+                  
+
+
+                - type: cu_lstm
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_lstm
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true 
+                  merge_mode: concat
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_lstm
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_lstm
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2
+
+                  
+                - type: dense
+                  units: 500
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  function: relu
+
+        encoder_3:
+            layers:            
+                - type: batchnormalization            
+                - type: dropout
+                  value: 0.2  
+                  
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2
+                  
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2                 
+                  
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2                 
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2 
+                - type: conv1d
+                  units: 500
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2 
+                - type: dense
+                  units: 500
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  function: relu
+        encoder_4:
+            layers:
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+    outputs:
+        output_tri:
+            layers:        
+                - type: dense
+                  units: 3480
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  name: output_tri
+                  function: softmax              
+
+        output_mono:
+            layers:        
+                - type: dense
+                  units: 347  # start from 1 
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  name: output_mono   
+                  function: softmax
+                  
+    seq2seq-encoder-decoder:
+        encoder-decoder_112:
+            encoder:
+                - lstm_units: 1500
+            decoder:
+                - lstm_units: 1500
+                  context_units: 500
+                  n_state: 256
+                  n_head: 1
+
+                  units: 349 # mono + <s> + </s> 
+
+loss_weights: {'output_tri' :1.0, 'output_mono': 1.0, 'output_seq2seq': 0.2}
+
+          
+optimizer1:          
+    name: adam
+    ngpu: 1
+    lr: 0.001 # 1E-4
+    beta_1: 0.9
+    beta_2: 0.999
+    epsilon: 0.00000001
+    batch_size: 16
+    
+optimizer:          
+    name: rmsprop
+    ngpu: 2
+    lr: 0.0004 # 1E-4
+    rho: 0.95
+    epsilon: 0.00000001
+    batch_size: 16      

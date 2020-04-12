@@ -18,13 +18,22 @@ The goal of this tool is to  train flexible deep neural acoustic models in the c
 
 # Installation
 
-  - Install miniconda.
+  - Install [miniconda](https://docs.conda.io/en/latest/miniconda.html).
   - Create an environment.
   - Install PyKaldi using conda inside the environment.
   - Install Tensorflow  using conda inside the environment (gpu version).
   - Install Keras using conda inside the environment.
-  - Install Kaldi toolkit.
+```
+conda create --name tf_gpu
+conda activate tf_gpu
+conda install -c pykaldi pykaldi
+conda install tensorflow-gpu
+conda install keras
+```
 
+  - Install Kaldi toolkit (http://jrmeyer.github.io/asr/2016/01/26/Installing-Kaldi.html).
+
+Please note the toolkit was tested with tensorflow  version 1.13 and I am trying to test it on version 2.1.
 
 # 100 hours Librispeech  task
   - Run Kaldi Librispeech setup until step 14.
@@ -44,7 +53,7 @@ The goal of this tool is to  train flexible deep neural acoustic models in the c
  10_decodel_test_set.sh
 
 ```
-  - Update the  paths in config_kaldi.py before running 09_train.sh
+  - Update the  paths in config_kaldi.py before 07_compute_mean_var_stats.py
 
 
 # Acknowledgments
@@ -52,10 +61,14 @@ The goal of this tool is to  train flexible deep neural acoustic models in the c
   - https://github.com/val260/DeepSpeech-Keras
   - https://github.com/dspavankumar/keras-kaldi
   - Some layers  are collected from the web.
-  - Dan Povey
+  - QCRI where I ran some experimental work.
+  - Dan Povey.
 
+# Future work
+  - ivector support.
+  - Mixed precision.
+  - Sequence training/LF-MMI objective functions support.
+  - knowledge distillation.
 
-
-
-  # Contributing
-   let us talk about this work!   
+# Contributing
+   - Let us talk about this work!   

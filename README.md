@@ -37,24 +37,56 @@ Please note the toolkit was tested with tensorflow  version 1.13 and I am trying
 
 # 100 hours Librispeech  task
   - Run Kaldi Librispeech setup until step 14.
-  - Update the paths and run the scripts in Librispeech_work:
-
+  - Assume the cloned code is in ~/keras-kaldi/librispeech_work
+  - Generate fmllr features:
 ```
- 01_gen_mllr_feat.sh
- 02_sort_fmllr_feat.sh
- 03_dump_train_fmllr.sh
- 03_gen_align.sh
- 04_collect_align.sh
- 05_collect_target_sequence.sh
- 06_compute_num_classes.sh
- 07_compute_mean_var_stats.py
- 08_compute_priors.sh
+cd ~/keras-kaldi/librispeech_work   
+ln -s ./01_gen_mllr_feat.sh /media/lumi/alpha/kaldi/egs/librispeech/s5/01_gen_mllr_feat.sh
+cd  /media/lumi/alpha/kaldi/egs/librispeech/s5/
+./01_gen_mllr_feat.sh
+```
+  - Sort fmllr features based on their length. It is used to minimize the padding:
+```
+cd ~/keras-kaldi/librispeech_work   
+./02_sort_fmllr_feat.sh (update the paths in the script)
+```
+  - Generate the alignments for train/dev:
+```
+cd ~/keras-kaldi/librispeech_work   
+ln -s 03_gen_align.sh /media/lumi/alpha/kaldi/egs/librispeech/s5/03_gen_align.sh
+cd  /media/lumi/alpha/kaldi/egs/librispeech/s5/
+./03_gen_align.sh
+cd ~/keras-kaldi/librispeech_work   
+./04_collect_align.sh
+```
+  - Generate the phone targets for RNN decoder regularization:
+```
+cd ~/keras-kaldi/librispeech_work   
+./05_collect_target_sequence.sh
+```
+  - Get model info:
+```
+cd ~/keras-kaldi/librispeech_work   
+./06_compute_num_classes.sh
+```
+  - Update the  paths in config_kaldi.py before
+  - Compute the global mean and variance:
+```
+cd ~/keras-kaldi/librispeech_work   
+python 07_compute_mean_var_stats.py
+```
+  - Compute state prior probability:
+```
+  08_compute_priors.sh
+```
+  - Train a model selected from config_train dir
+```
  09_train.sh
- 10_decodel_test_set.sh
-
 ```
-  - Update the  paths in config_kaldi.py before 07_compute_mean_var_stats.py
-
+  - Decode and compute the WER
+```
+ 10_decodel_test_set.sh
+```
 
 # Acknowledgments
   - https://github.com/mravanelli/pytorch-kaldi

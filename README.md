@@ -79,11 +79,11 @@ python 07_compute_mean_var_stats.py
 ```
   08_compute_priors.sh
 ```
-  - Train a model selected from config_train dir
+  - Train a model selected from the yaml files in the config_train dir:
 ```
  09_train.sh
 ```
-  - Decode and compute the WER
+  - Decode and compute the WER:
 ```
  10_decodel_test_set.sh
 ```

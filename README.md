@@ -24,10 +24,11 @@ The goal of this tool is to  train flexible deep neural acoustic models in the c
   - Install Tensorflow  using conda inside the environment (gpu version).
   - Install Keras using conda inside the environment.
 ```
-conda create --name tf_gpu
+conda create --name tf_gpu python=3.6
 conda activate tf_gpu
 conda install -c pykaldi pykaldi
-conda install tensorflow-gpu
+conda install tensorflow-gpu=1.13
+conda install pyyaml
 conda install keras
 ```
 

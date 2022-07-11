@@ -1,0 +1,117 @@
+seed: 9001
+out_path: /media/lumi/alpha/asr_work
+
+
+model:
+    input_feat: fmllr
+    input_dim: 40
+    encoders:
+        encoder_1:
+            layers:
+                - type: context_expansion
+                  left: 5
+                  right: 5  
+                - type: batchnormalization            
+                - type: dropout
+                  value: 0.2  
+                  
+
+                - type: dense
+                  units: 1024
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2
+
+
+                - type: dense
+                  units: 1024
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2
+
+                - type: dense
+                  units: 1024
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2
+
+                - type: dense
+                  units: 1024
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2
+
+                - type: dense
+                  units: 1024
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2
+
+    outputs:
+        output_tri:
+            layers:        
+                - type: dense
+                  units: 1928
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  name: output_tri
+                  function: softmax              
+
+        output_mono:
+            layers:        
+                - type: dense
+                  units: 49  # start from 1 
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  name: output_mono   
+                  function: softmax
+                  
+    seq2seq-encoder-decoder1:
+        encoder-decoder_1:
+            encoder:
+                - lstm_units: 500
+            decoder:
+                - lstm_units: 500
+                  units: 51 # mono + <s> + </s>   
+          
+optimizer:          
+    name: adam
+    ngpu: 2
+    lr: 0.001 # 1E-4
+    beta_1: 0.9
+    beta_2: 0.999
+    epsilon: 0.00000001
+    batch_size: 32
+    
+optimizer1:          
+    name: rmsprop
+    ngpu: 2
+    lr: 0.0004 # 1E-4
+    rho: 0.95
+    epsilon: 0.00000001
+    batch_size: 32
+
+
+optimizer2:          
+    name: sgd
+    ngpu: 2
+    lr: 0.08 # 1E-4
+    momentum: 0.9
+    batch_size: 32          

@@ -1,0 +1,134 @@
+seed: 2234
+out_path: /lfs01/workdirs/hlwn026u2/keras-kaldi/timit_work//asr_work_timit
+
+
+model:
+    input_feat: fmllr
+    input_dim: 40
+    encoders:
+        encoder_1:
+            layers:            
+                - type: batchnormalization            
+                - type: dropout
+                  value: 0.2  
+                  
+                - type: conv1d
+                  units: 250
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2
+                  
+                - type: conv1d
+                  units: 250
+                  activation: linear
+                  strides: 1
+                  kernel_width: 11
+                - type: batchnormalization
+                - type: activation
+                  function: relu                  
+                - type: dropout
+                  value: 0.2                 
+                  
+
+
+                - type: gru
+                  units: 250
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: sum
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: gru
+                  units: 250
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true 
+                  merge_mode: sum
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: gru
+                  units: 250
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: sum
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: gru
+                  units: 250
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: sum
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2
+
+                  
+                - type: dense
+                  units: 250
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  function: relu                  
+                  
+    outputs:
+        output_tri:
+            layers:        
+                - type: dense
+                  units: 1960
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  name: output_tri
+                  function: softmax              
+
+        output_mono:
+            layers:        
+                - type: dense
+                  units: 49  # start from 1 
+                  activation: linear
+                - type: batchnormalization                  
+                - type: activation
+                  name: output_mono   
+                  function: softmax
+                  
+    seq2seq-encoder-decoder1:
+        encoder-decoder_1:
+            encoder:
+                - lstm_units: 500
+            decoder:
+                - lstm_units: 500
+                  context_units: 500
+                  units: 51 # mono + <s> + </s> 
+
+loss_weights: {'output_tri' :1.0, 'output_mono': 1.0}                  
+          
+optimizer1:          
+    name: adam
+    ngpu: 2
+    lr: 0.0004 # 1E-4
+    beta_1: 0.9
+    beta_2: 0.999
+    epsilon: 0.00000001
+    batch_size: 32
+    
+optimizer:          
+    name: rmsprop
+    ngpu: 2
+    lr: 0.0004 # 1E-4
+    rho: 0.95
+    epsilon: 0.00000001
+    batch_size: 32      

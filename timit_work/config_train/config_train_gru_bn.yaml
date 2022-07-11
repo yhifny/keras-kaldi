@@ -1,0 +1,94 @@
+seed: 600
+out_path: /media/lumi/alpha/asr_work_timit
+
+
+model:
+    input_feat: fmllr
+    input_dim: 40
+    encoders:
+        encoder_1:
+            layers:
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2 
+                  
+                - type: cu_gru
+                  units: 550
+                  dropout: 0.2
+                  rec_dropout: 0.2
+                  bidirectional: true
+                  merge_mode: concat                  
+                - type: batchnormalization
+                - type: dropout
+                  value: 0.2                
+    outputs:
+        output_tri:
+            layers:        
+                - type: dense
+                  units: 1928
+                  activation: softmax
+                  name: output_tri
+
+        output_mono:
+            layers:        
+                - type: dense
+                  units: 49  # start from 1 
+                  activation: softmax
+                  name: output_mono   
+                  
+ 
+          
+loss_weights: {'output_tri' :1.0, 'output_mono': 1.0} 
+          
+optimizer1:          
+    name: adam
+    ngpu: 1
+    lr: 0.001 # 1E-4
+    beta_1: 0.9
+    beta_2: 0.999
+    epsilon: 0.00000001
+    batch_size: 32
+    
+optimizer:          
+    name: rmsprop
+    ngpu: 2
+    lr: 0.0004 # 1E-4
+    rho: 0.95
+    epsilon: 0.00000001
+    batch_size: 32    

@@ -214,7 +214,7 @@ print("Number of devices: {}".format(strategy.num_replicas_in_sync))
 with strategy.scope():
     model , parallel_model = model_definition.create_model(cfg) 
     sgd = model_definition.create_optimizer(cfg)
-    model.compile(optimizer=sgd, loss='categorical_crossentropy', 
+    model.compile(optimizer=sgd, loss=tf.keras.losses.SparseCategoricalCrossentropy(), 
                               metrics=['accuracy'],
                               loss_weights=cfg['loss_weights'])
 

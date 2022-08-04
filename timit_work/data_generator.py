@@ -101,7 +101,6 @@ class DataGenerator(tf.keras.utils.Sequence):
         self.indexes = np.arange(len(self.list_files))
         if self.shuffle == True:
             np.random.shuffle(self.indexes)
-
     def normalize(self, feature, eps=1e-14):
         return (feature - self.feats_mean) / (self.feats_std + eps)
 		
@@ -113,25 +112,25 @@ class DataGenerator(tf.keras.utils.Sequence):
         X = sequence.pad_sequences( batch_data,
 										maxlen=max_length,
 										dtype='float32',
-                                        padding='post')
+                                        padding='pre')
                                         
         Y = sequence.pad_sequences( batch_label,
                                         maxlen=max_length,
                                         dtype='int32',
-                                        padding='post',
-                                        value = -1)
-
-        Y =  np.array([to_categorical(seq, num_classes=self.n_classes)
-                            for seq in Y ])
+                                        padding='pre',
+                                        value = 0)
+       
+       # Y =  np.array([to_categorical(seq, num_classes=self.n_classes)
+       #                     for seq in Y ])
                                         
         Y_mono = sequence.pad_sequences( batch_label_mono,
                                         maxlen=max_length,
                                         dtype='int32',
-                                        padding='post',
-                                        value = -1)
+                                        padding='pre',
+                                        value = 0)
 
-        Y_mono =  np.array([to_categorical(seq, num_classes=self.n_mono_classes) 
-                                for seq in Y_mono])
+       # Y_mono =  np.array([to_categorical(seq, num_classes=self.n_mono_classes) 
+       #                         for seq in Y_mono])
                                       
         return X, Y, Y_mono
 	
@@ -217,8 +216,8 @@ class DataGeneratorSeq2Seq(tf.keras.utils.Sequence):
                                         padding='pre',
                                         value = -1)
 
-        Y =  np.array([to_categorical(seq, num_classes=self.n_classes)
-                            for seq in Y ])
+        #Y =  np.array([to_categorical(seq, num_classes=self.n_classes)
+        #                    for seq in Y ])
                                         
         Y_mono = sequence.pad_sequences( batch_label_mono,
                                         maxlen=max_length,
@@ -226,8 +225,9 @@ class DataGeneratorSeq2Seq(tf.keras.utils.Sequence):
                                         padding='pre',
                                         value = -1)
 
-        Y_mono =  np.array([to_categorical(seq, num_classes=self.n_mono_classes) 
-                                for seq in Y_mono])
+        #Y_mono =  np.array([to_categorical(seq, num_classes=self.n_mono_classes) 
+        #                        for seq in Y_mono])
+        
         # seq2seq processing                        
         max_length = max([ len(f) for f in batch_dec_inputs_mono])
         X_dec = sequence.pad_sequences( batch_dec_inputs_mono,
@@ -242,12 +242,11 @@ class DataGeneratorSeq2Seq(tf.keras.utils.Sequence):
                                         padding='post',
                                         value = -1)
 
-        X_dec =  np.array([to_categorical(seq, num_classes=self.n_mono_classes+2)
-                            for seq in X_dec ])                                        
-        Y_dec =  np.array([to_categorical(seq, num_classes=self.n_mono_classes+2)
-                            for seq in Y_dec ])
+        #X_dec =  np.array([to_categorical(seq, num_classes=self.n_mono_classes+2)
+        #                    for seq in X_dec ])                                        
+        #Y_dec =  np.array([to_categorical(seq, num_classes=self.n_mono_classes+2)
+        #                    for seq in Y_dec ])
                             
                                       
         return X,X_dec, Y, Y_mono,Y_dec
-
 

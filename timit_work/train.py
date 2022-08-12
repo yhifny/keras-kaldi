@@ -141,6 +141,8 @@ learning_rate= cfg['optimizer']['lr']
 dev_batch_size = cfg['optimizer']['ngpu']
 loss_weights = cfg['loss_weights']
 priors = np.genfromtxt('priors.csv', delimiter=',')
+feats_mean = np.load(cfg['mean_std_file'])['mean']
+feats_variance = np.load(cfg['mean_std_file'])['std'] ** 2
 #dev_ref_list= open("/media/lumi/alpha/kaldi/egs/librispeech/s5/data/dev_clean/text").readlines()
 #test_ref_list= open("/media/lumi/alpha/kaldi/egs/librispeech/s5/data/test_clean/text").readlines()    
 
@@ -165,7 +167,6 @@ dev_data_dic = read_data(config_kaldi.mono_dev_rspecifier,
 
 
 mean_var_file="mean_std_fmllr.npz"
-
 
 
 # build data generator
@@ -212,7 +213,7 @@ print("Number of devices: {}".format(strategy.num_replicas_in_sync))
 
 # Open a strategy scope.
 with strategy.scope():
-    model , parallel_model = model_definition.create_model(cfg) 
+    model , parallel_model = model_definition.create_model(cfg, feats_mean, feats_variance) 
     sgd = model_definition.create_optimizer(cfg)
     model.compile(optimizer=sgd, loss=tf.keras.losses.SparseCategoricalCrossentropy(), 
                               metrics=['accuracy'],
@@ -220,7 +221,6 @@ with strategy.scope():
 
 print(model.summary())
 #print(parallel_model.summary())
-
 
 
 ###############

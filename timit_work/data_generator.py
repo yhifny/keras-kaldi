@@ -79,7 +79,8 @@ class DataGenerator(tf.keras.utils.Sequence):
 
         # Find data for batch
 
-        batch_data  = [self.normalize(self.feats_ark[self.list_files[k]]) for k in indexes]
+        # batch_data  = [self.normalize(self.feats_ark[self.list_files[k]]) for k in indexes]
+        batch_data  = [self.feats_ark[self.list_files[k]] for k in indexes]
         batch_label = [self.align_ark[self.list_files[k]] for k in indexes]
         batch_label_mono = [self.mono_align_ark[self.list_files[k]] for k in indexes]        
         W = [self.sample_weight[k] for k in indexes]
@@ -167,7 +168,7 @@ class DataGeneratorSeq2Seq(tf.keras.utils.Sequence):
         indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
 
         # Find data for batch
-        batch_data  = [self.normalize(self.feats_ark[self.list_files[k]]) for k in indexes]
+        batch_data  = [self.feats_ark[self.list_files[k]] for k in indexes]
         batch_label = [self.align_ark[self.list_files[k]] for k in indexes]
         batch_label_mono = [self.mono_align_ark[self.list_files[k]] for k in indexes]        
         # seq2seq batch data

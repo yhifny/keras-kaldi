@@ -10,7 +10,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import sequence
 from tensorflow.keras import utils 
 from tensorflow.keras.layers import dot, concatenate, Activation, Embedding , Dense, Input,LSTM,GlobalAveragePooling1D,GlobalMaxPooling1D, SpatialDropout1D
-from tensorflow.keras.layers import  SpatialDropout1D,Dropout, LSTM, GRU, Bidirectional, TimeDistributed
+from tensorflow.keras.layers import  SpatialDropout1D,Dropout, LSTM, GRU, Bidirectional, TimeDistributed, Normalization
 from tensorflow.keras.models import Model
 from tensorflow.keras import backend as K
 from tensorflow.keras.callbacks import ModelCheckpoint,EarlyStopping
@@ -39,6 +39,7 @@ from my_layers import ContextExpansion
 import transformer 
 #from parallel_model import MultiGpuModel, multi_gpu_wrapper
 #from keras_transformer.keras_transformer import TransformerBlock
+
 
 def create_optimizer(config):
 
@@ -190,7 +191,7 @@ def create_layer(config):
         raise("Layer construction is not supported %s"%config['type'])
         
 
-def create_model(config):
+def create_model(config, feats_mean, feats_variance):
 
     # random seed
     np.random.seed(config['seed'])
@@ -208,8 +209,10 @@ def create_model(config):
     
     # create input layer
     input_tensor = Input([None, input_dim], name='X_%s'%input_feat)
+    input_tensor = Normalization(mean=feats_mean, variance=feats_variance)(input_tensor)
     encoder_input_tesnor.append(input_tensor)
     
+
     # encoders
     for encoder_config in config['model']['encoders']:
         x = input_tensor

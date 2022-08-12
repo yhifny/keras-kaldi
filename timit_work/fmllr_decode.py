@@ -115,7 +115,7 @@ posterior_writer = MatrixWriter("ark:"+sys.argv[4]+'.ark')
 with SequentialMatrixReader(feats_rspecifier) as f:
     for (fkey, feats)   in f:
         print ('processing: ', fkey, flush=True)        	
-        feats=normalize(feats.numpy(), feats_mean, feats_std)[newaxis,...]
+        feats= feats.numpy()[newaxis,...]
         loglikes = np.log (model.predict(feats)[0,:,:] / priors)
         loglikes [loglikes == -np.inf] = -100        
         out = asr.decode(Matrix(loglikes))

@@ -1,0 +1,69 @@
+seed: 2234
+out_path: /lfs01/workdirs/hlwn026u2/keras-kaldi/timit_work//asr_work_timit
+mean_std_file: mean_std_fmllr.npz
+
+
+model:
+    name: conformer
+    input_feat: fmllr
+    input_dim: 40
+    encoders:
+     encoder:
+      subsampling:
+        type: conv2d
+        filters: 144
+        kernel_size: 3
+        strides: 1
+      positional_encoding: sinusoid
+      dmodel: 64
+      num_blocks: 16
+      head_size: 36
+      num_heads: 4
+      mha_type: relmha
+      kernel_size: 32
+      fc_factor: 0.5
+      dropout: 0.1
+
+    outputs:
+      output_tri:
+        layers:
+          - type: dense
+            units: 1960
+            activation: linear
+          - type: batchnormalization
+          - type: activation
+            name: output_tri
+            function: softmax
+
+      output_mono:
+        layers:
+          - type: dense
+            units: 49  # start from 1
+            activation: linear
+          - type: batchnormalization
+          - type: activation
+            name: output_mono
+            function: softmax
+
+    seq2seq-encoder-decoder1:
+      encoder-decoder_1:
+        encoder:
+          - lstm_units: 500
+        decoder:
+          - lstm_units: 500
+            context_units: 500
+            units: 51 # mono + <s> + </s>
+
+
+loss_weights: {'output_tri' :1.0, 'output_mono': 1.0}                  
+
+optimizer:
+    name: adam
+    ngpu: 2
+    lr: 0.0004 # 1E-4
+    beta_1: 0.9
+    beta_2: 0.98
+    epsilon: 0.000000001
+    batch_size: 2
+    warmup_steps: 10000
+          

@@ -28,4 +28,4 @@ rm -r /lfs01/workdirs/hlwn026u2/keras-kaldi/timit_work//asr_work_timit
 mkdir -p /lfs01/workdirs/hlwn026u2/keras-kaldi/timit_work//asr_work_timit
 
 # config_train_transformer
-python train.py config_train/config_train_cnn_gru_bn_small.yaml| tee /lfs01/workdirs/hlwn026u2/keras-kaldi/timit_work//asr_work_timit/my_log.txt 
+python train_conformer.py config_train/config_train_conformer.yaml| tee /lfs01/workdirs/hlwn026u2/keras-kaldi/timit_work//asr_work_timit/my_log.txt 

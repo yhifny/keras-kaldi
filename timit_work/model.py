@@ -20,11 +20,16 @@ from tensorflow.keras import initializers
 from tensorflow.keras.preprocessing import sequence
 import tensorflow.keras
 from tensorflow.keras import optimizers
+from tensorflow_asr.optimizers.schedules import TransformerSchedule
+
 from tensorflow.keras.models import load_model
 #sys.setdefaultencoding('utf-8')
 import glob
 import os
-
+from tensorflow_asr.models.encoders.conformer import ConformerEncoder
+from deepspeech2 import DeepSpeech2Encoder
+from jasper import JasperEncoder
+from tensorflow_asr.models.encoders.contextnet import ContextNetEncoder
 from tensorflow.keras.callbacks import Callback
 import warnings
 import tensorflow as tf
@@ -55,6 +60,30 @@ def create_optimizer(config):
                     decay=0.0, amsgrad=False, clipnorm=100)
 
     elif name == 'adam':
+        if 'name' in config['model']:
+          if config['model']['name']=='conformer':
+             dmodel = config['model']['encoders']['encoder']['dmodel']
+             return tensorflow.keras.optimizers.Adam(
+                TransformerSchedule(
+                    d_model= dmodel,
+                    warmup_steps=config['optimizer'].pop("warmup_steps", 1000),
+                    max_lr=(0.05 / math.sqrt(dmodel)),
+                ),
+                beta_1=config['optimizer']['beta_1'],
+                beta_2=config['optimizer']['beta_2'],
+                epsilon=config['optimizer']['epsilon'],
+             )
+          if config['model']['name']=='contextnet':
+             return tensorflow.keras.optimizers.Adam(             
+                    TransformerSchedule(
+                        d_model= config['dmodel'],
+                        warmup_steps=config['optimizer'].pop("warmup_steps", 10000),
+                        max_lr=(0.05 / math.sqrt(config['dmodel'])),
+                    ), 
+                    beta_1=config['optimizer']['beta_1'], 
+                    beta_2=config['optimizer']['beta_2'],
+                    epsilon=config['optimizer']['epsilon']
+                    ) 
         return tensorflow.keras.optimizers.Adam(lr=lr, 
                     beta_1=config['optimizer']['beta_1'], 
                     beta_2=config['optimizer']['beta_2'], 
@@ -212,12 +241,26 @@ def create_model(config, feats_mean, feats_variance):
     input_tensor = Normalization(mean=feats_mean, variance=feats_variance)(input_tensor)
     encoder_input_tesnor.append(input_tensor)
     
-
+    if config['model']['name'] == 'contextnet':
+        input_length_tensor = Input([1], name='X_len_%s'%input_feat, dtype=tf.int32)
+        input_length_tensor = tf.squeeze(input_length_tensor , axis=-1)
+        encoder_input_tesnor.append(input_length_tensor)
     # encoders
     for encoder_config in config['model']['encoders']:
         x = input_tensor
-        for layer_config in config['model']['encoders'][encoder_config]['layers']:
-            x = create_layer(layer_config)(x)
+        x = tf.expand_dims(input_tensor, axis=-1)
+        if 'name' in config['model']:
+           if config['model']['name'] == "conformer":
+              x = ConformerEncoder(**config['model']['encoders']['encoder'])(x)
+           elif config['model']['name'] == 'deepspeech2':
+              x = DeepSpeech2Encoder(**config['model']['encoders']['encoder'])(x)
+           elif config['model']['name'] == 'contextnet':
+              x = ContextNetEncoder(**config['model']['encoders']['encoder'])([x,input_length_tensor])
+           elif config['model']['name'] == 'jasper': 
+              x = JasperEncoder(**config['model']['encoders']['encoder'])(x)     
+        else: 
+           for layer_config in config['model']['encoders'][encoder_config]['layers']:
+               x = create_layer(layer_config)(x)
         encoder_hidden_tesnor.append(x)
         
     merged_tensor=encoder_hidden_tesnor[0]    

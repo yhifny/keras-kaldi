@@ -50,7 +50,7 @@ class DataGenerator(tf.keras.utils.Sequence):
     'Generates data for Keras'
     def __init__(self, data_dic,feat_norm_file,
                  n_classes,n_mono_classes, batch_size=32, min_length=0, max_length=20000,
-                 shuffle=False):
+                 shuffle=False, context_net=False):
         'Initialization'
         self.batch_size = batch_size
         self.list_files = data_dic['feat_ids']
@@ -61,6 +61,7 @@ class DataGenerator(tf.keras.utils.Sequence):
         self.n_classes = n_classes
         self.n_mono_classes = n_mono_classes        
         self.shuffle = shuffle
+        self.context_net = context_net
         self.max_length = max_length
         self.feats_mean = np.load(feat_norm_file)['mean']
         self.feats_std = np.load(feat_norm_file)['std']
@@ -86,15 +87,23 @@ class DataGenerator(tf.keras.utils.Sequence):
         W = [self.sample_weight[k] for k in indexes]
         # Generate data
         X, Y, Y_mono  = self.__data_generation(batch_data,batch_label,batch_label_mono)
+            
         #print (X.shape)
         #for k in indexes:
         #    print (self.list_files[k]) 
-        #print ("index", index)        
-        
-        if sum(W)==len(W):		
-            return X, [Y, Y_mono]
+        #print ("index", index)
+        if self.context_net:
+            X_len = [ len(f) for f in batch_data]
+            X_len = np.asarray(X_len)
+            if sum(W)==len(W):		
+                return [X, X_len], [Y, Y_mono]
+            else:
+                return [X, X_len], [Y, Y_mono],np.asarray(W)
         else:
-            return X, [Y, Y_mono],np.asarray(W)
+            if sum(W)==len(W):		
+                return X, [Y, Y_mono]
+            else:
+                return X, [Y, Y_mono],np.asarray(W)
 		
 
     def on_epoch_end(self):

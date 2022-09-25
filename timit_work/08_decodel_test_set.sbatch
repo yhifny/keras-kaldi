@@ -21,8 +21,8 @@ export PATH
 
 export CUDA_VISIBLE_DEVICES=0
 
-module load Anaconda3
-source activate /lfs01/workdirs/hlwn026u2/keras-kaldi/conda_envs/conda_env
+#module load Anaconda3
+#source activate /lfs01/workdirs/hlwn026u2/keras-kaldi/conda_envs/conda_env
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/lfs01/workdirs/hlwn026u2/keras-kaldi/conda_envs/conda_env/lib
 
 
@@ -31,7 +31,7 @@ SCRIPT_PATH=./
 
 
 #inputs
-IN_MODEL=./asr_work_timit/model.hdf5
+IN_MODEL=./asr_work_timit_cnn/model.hdf5
 DATA_SET=test
 IN_DIR=$(dirname "${IN_MODEL}")
 
@@ -39,6 +39,7 @@ IN_DIR=$(dirname "${IN_MODEL}")
 
 rm -f ${IN_DIR}/temp_results.txt
 rm -f ${IN_DIR}/log.txt
+
 
 python $SCRIPT_PATH/fmllr_decode.py $IN_MODEL $DATA_SET $SCRIPT_PATH/priors.csv  $IN_DIR/out.txt >&  $IN_DIR/log.txt
 

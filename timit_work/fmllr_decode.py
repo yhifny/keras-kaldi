@@ -26,6 +26,8 @@ import tensorflow.keras
 from tensorflow.keras import optimizers
 from tensorflow.keras.models import load_model
 
+from tensorflow_asr.models.encoders.conformer import ConformerEncoder
+
 
 import glob
 import os
@@ -88,7 +90,8 @@ kalid_model = load_model(sys.argv[1], custom_objects={#'GatedConvBlock':GatedCon
                                                         'Position_Embedding':Position_Embedding, 
                                                         'MultiHeadAttention':MultiHeadAttention,
                                                         'LayerNormalization':LayerNormalization,
-                                                        'Gelu':Gelu})
+                                                        'Gelu':Gelu,
+                                                        'ConformerEncoder':ConformerEncoder})
 model = Model(inputs=[kalid_model.input[0] if type(kalid_model.input) is list else kalid_model.input], outputs=[kalid_model.get_layer('output_tri').output])
 model.summary()
 

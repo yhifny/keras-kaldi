@@ -1,5 +1,6 @@
 seed: 2234
 out_path: /lfs01/workdirs/hlwn026u2/keras-kaldi/timit_work//asr_work_timit
+mean_std_file: mean_std_fmllr.npz
 
 
 model:

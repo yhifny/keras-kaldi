@@ -5,7 +5,7 @@ import os
 from subprocess import Popen, PIPE, DEVNULL
 
 num_jobs=10
-task_dir        = "/home/hlwn026u2/data/keras-kaldi//kaldi/egs/timit/s5"
+task_dir        = "/lfs01/workdirs/hlwn026u2/keras-kaldi//kaldi/egs/timit/s5"
 train_data_dir  = os.path.join (task_dir, 'data', 'train')
 dev_data_dir    = os.path.join (task_dir, 'data', 'dev')
 test_data_dir   = os.path.join (task_dir, 'data', 'test')

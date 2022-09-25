@@ -1,0 +1,75 @@
+seed: 2234
+out_path: /lfs01/workdirs/hlwn026u2/keras-kaldi/timit_work//asr_work_timit_jasper
+mean_std_file: mean_std_fmllr.npz
+
+
+model:
+    name: jasper
+    input_feat: fmllr
+    input_dim: 40
+    encoders:
+      encoder:
+        dense: True
+        first_additional_block_channels: 256
+        first_additional_block_kernels: 11
+        first_additional_block_strides: 1
+        first_additional_block_dilation: 1
+        first_additional_block_dropout: 0.2
+        nsubblocks: 3
+        block_channels: [ 256, 384, 512, 640, 768 ]
+        block_kernels: [ 11, 13, 17, 21, 25 ]
+        block_dropout: [ 0.2, 0.2, 0.2, 0.3, 0.3 ]
+        second_additional_block_channels: 896
+        second_additional_block_kernels: 1
+        second_additional_block_strides: 1
+        second_additional_block_dilation: 2
+        second_additional_block_dropout: 0.4
+        third_additional_block_channels: 1024
+        third_additional_block_kernels: 1
+        third_additional_block_strides: 1
+        third_additional_block_dilation: 1
+        third_additional_block_dropout: 0.4
+
+    outputs:
+      output_tri:
+        layers:
+          - type: dense
+            units: 1960
+            activation: linear
+          - type: batchnormalization
+          - type: activation
+            name: output_tri
+            function: softmax
+
+      output_mono:
+        layers:
+          - type: dense
+            units: 49  # start from 1
+            activation: linear
+          - type: batchnormalization
+          - type: activation
+            name: output_mono
+            function: softmax
+
+    seq2seq-encoder-decoder1:
+      encoder-decoder_1:
+        encoder:
+          - lstm_units: 500
+        decoder:
+          - lstm_units: 500
+            context_units: 500
+            units: 51 # mono + <s> + </s>
+
+
+loss_weights: {'output_tri' :1.0, 'output_mono': 1.0}                  
+          
+optimizer:
+    name: adam
+    ngpu: 2
+    lr: 0.0001 # 1E-4
+    beta_1: 0.9
+    beta_2: 0.98
+    epsilon: 1e-9
+    batch_size: 4
+
+
